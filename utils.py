@@ -37,9 +37,3 @@ def calculate_temperature_inputs(job_id):
     )
     temperature_inputs = (baseN_array * MULTIPLIER_ARRAY) + OFFSET_ARRAY
     return temperature_inputs
-
-
-job_id = 1166
-temperature_inputs = calculate_temperature_inputs(job_id)
-print("Example - For job id 1166, the temprature inputs are :", temperature_inputs)
-

@@ -6,6 +6,8 @@ import time
 import signal 
 from utils import calculate_temperature_inputs
 from config import TIMEOUT
+import argparse
+import csv
 
 ##------  Model intialization
 ahu_model = air_handling_unit(
@@ -43,7 +45,8 @@ def handle_alarm(signum, frame):
 # Set the function to be called on alarm
 signal.signal(signal.SIGALRM, handle_alarm)
 
-def mpc_function(job_id):
+def mpc_function(job_id: int):
+    print('job id ::', job_id)
     temperature_inputs = calculate_temperature_inputs(job_id)
     # Start the alarm
     signal.alarm(TIMEOUT)  # You want the function to stop after timeout
@@ -73,4 +76,17 @@ def mpc_function(job_id):
         print('Function execution took too long, stopping...')
         return TIMEOUT
 
-mpc_function(job_id=1166)
+# mpc_function(job_id=1166)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process an integer job_id for the mpc_function.")
+    parser.add_argument("job_id", type=int, help="An integer job_id for the mpc_function.")
+    args = parser.parse_args()
+    
+    result = mpc_function(args.job_id)
+    
+    with open(f'results/result_{args.job_id}.csv', 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow([result])
+    
+    
