@@ -46,7 +46,6 @@ def handle_alarm(signum, frame):
 signal.signal(signal.SIGALRM, handle_alarm)
 
 def mpc_function(job_id: int):
-    print('job id ::', job_id)
     temperature_inputs = calculate_temperature_inputs(job_id)
     # Start the alarm
     signal.alarm(TIMEOUT)  # You want the function to stop after timeout
@@ -57,24 +56,24 @@ def mpc_function(job_id: int):
         sol = mpc.solve(
         init_cond, actuators, temperature_inputs[5], Tsa_min, warm_start, sol_prev
         )
-        solver_status = sol[0]
-        omega_simulation = sol[1]
-        dout = sol[2]
-        drec = 100 - dout
-        Tma = sol[3]
-        Tha = sol[4]
-        Tca = sol[5]
-        Tsa = sol[6]
         end = time.time()
         total_time = end - start
-        print('Solver Status', solver_status)
-        print('Fan Speed ::', omega_simulation, 'OA Damper ::', dout, 'RA Damper ::', drec, 'MA Temp ::', Tma, 'HA Temp ::',
-              Tha, 'CA Temp ::', Tca, 'SA Temp ::', Tsa, 'Total time ::', total_time)
         signal.alarm(0)
-        return total_time
+        full_array = np.concatenate((temperature_inputs, sol[1:7], [total_time]))
+        print('Solver succeeded...', full_array)
+        return full_array
+    except RuntimeError:
+        full_array = np.zeros(13)
+        full_array[:6] = temperature_inputs
+        full_array[-1] = -300
+        print('Runtime error due to infeaseablity in constraints etc...', full_array)
+        return full_array
     except TimeoutError:
-        print('Function execution took too long, stopping...')
-        return TIMEOUT
+        full_array = np.zeros(13)
+        full_array[:6] = temperature_inputs
+        full_array[-1] = -700
+        print('Function execution took too long, stopping...', full_array)
+        return full_array
 
 # mpc_function(job_id=1166)
 
@@ -87,6 +86,5 @@ if __name__ == "__main__":
     
     with open(f'results/result_{args.job_id}.csv', 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow([result])
-    
+        csvwriter.writerow(result)
     
