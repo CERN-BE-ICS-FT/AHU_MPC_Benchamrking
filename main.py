@@ -45,8 +45,8 @@ def handle_alarm(signum, frame):
 # Set the function to be called on alarm
 signal.signal(signal.SIGALRM, handle_alarm)
 
-def mpc_function(job_id: int):
-    Toa, temperature_inputs, actuator_inputs = calculate_inputs(job_id)
+def mpc_function(task_id: int):
+    Toa, temperature_inputs, actuator_inputs = calculate_inputs(task_id)
     # Start the alarm
     signal.alarm(TIMEOUT)  # You want the function to stop after timeout
     try:
@@ -81,16 +81,16 @@ def mpc_function(job_id: int):
         print('Function execution took too long, stopping...', full_array)
         return full_array
 
-# mpc_function(job_id=1166)
+# mpc_function(task_id=1166)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process an integer job_id for the mpc_function.")
-    parser.add_argument("job_id", type=int, help="An integer job_id for the mpc_function.")
+    parser = argparse.ArgumentParser(description="Process an integer task_id for the mpc_function.")
+    parser.add_argument("task_id", type=int, help="An integer task_id for the mpc_function.")
     args = parser.parse_args()
     
-    result = mpc_function(args.job_id)
+    result = mpc_function(args.task_id)
     
-    # with open(f'results/result_{args.job_id}.csv', 'w', newline='') as csvfile:
-    #     csvwriter = csv.writer(csvfile)
-    #     csvwriter.writerow(result)
+    with open(f'results/result_{args.task_id}.csv', 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(result)
     
