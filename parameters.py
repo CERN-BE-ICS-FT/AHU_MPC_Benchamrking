@@ -5,7 +5,7 @@ minutes_dt_mpc = 8
 mpc_hours = 16
 T_mpc = 3600 * mpc_hours
 dt_mpc = 60 * minutes_dt_mpc
-N_mpc = int(T_mpc / dt_mpc)  # number of control intervals
+N_mpc = int(T_mpc / dt_mpc)  # number of control intervals = 120 (currently)
 
 ##------  For Mixing Chamber
 gamma_ma = 0.95  # Forgetting factor

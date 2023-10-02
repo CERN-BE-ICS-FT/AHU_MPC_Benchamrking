@@ -4,8 +4,8 @@ import parameters as param
 from casadi import *
 import time
 import signal 
-from utils import calculate_temperature_inputs
-from config import TIMEOUT
+from utils_v2 import calculate_inputs
+from config_v2 import TIMEOUT
 import argparse
 import csv
 
@@ -36,7 +36,7 @@ s_opts = {"max_iter": 1000}
 opti.solver("ipopt", p_opts, s_opts)
 
 # Set the parameters to use inside the function 
-Tsa_min, omega_init, dout_init = 16, 1, 10
+Tsa_min = 16
 
 # This is the function that will be called when the alarm goes off
 def handle_alarm(signum, frame):
@@ -46,31 +46,37 @@ def handle_alarm(signum, frame):
 signal.signal(signal.SIGALRM, handle_alarm)
 
 def mpc_function(job_id: int):
-    temperature_inputs = calculate_temperature_inputs(job_id)
+    Toa, temperature_inputs, actuator_inputs = calculate_inputs(job_id)
     # Start the alarm
     signal.alarm(TIMEOUT)  # You want the function to stop after timeout
     try:
         start = time.time()
-        init_cond = temperature_inputs[:5]
-        actuators = np.array([omega_init, dout_init])
+        init_cond = temperature_inputs
+        actuators = actuator_inputs
         sol = mpc.solve(
-        init_cond, actuators, temperature_inputs[5], Tsa_min, warm_start, sol_prev
+        init_cond, actuators, Toa, Tsa_min, warm_start, sol_prev
         )
         end = time.time()
         total_time = end - start
         signal.alarm(0)
-        full_array = np.concatenate((temperature_inputs, sol[1:7], [total_time]))
-        print('Solver succeeded...', full_array)
+        full_array = np.concatenate(([Toa], temperature_inputs, actuator_inputs, [total_time]))
+        print('Solver succeeded...')
+        print('Toa, Tza, Tma, Tha, Tca, Tsa, omega,  dout, Total_time')
+        print(full_array)
         return full_array
     except RuntimeError:
-        full_array = np.zeros(13)
-        full_array[:6] = temperature_inputs
+        full_array = np.zeros(9)
+        full_array[0] = Toa
+        full_array[1:6] = temperature_inputs
+        full_array[6:8] = actuator_inputs
         full_array[-1] = -300
         print('Runtime error due to infeaseablity in constraints etc...', full_array)
         return full_array
     except TimeoutError:
-        full_array = np.zeros(13)
-        full_array[:6] = temperature_inputs
+        full_array = np.zeros(9)
+        full_array[0] = Toa
+        full_array[1:6] = temperature_inputs
+        full_array[6:8] = actuator_inputs
         full_array[-1] = -700
         print('Function execution took too long, stopping...', full_array)
         return full_array
@@ -84,7 +90,7 @@ if __name__ == "__main__":
     
     result = mpc_function(args.job_id)
     
-    with open(f'results/result_{args.job_id}.csv', 'w', newline='') as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(result)
+    # with open(f'results/result_{args.job_id}.csv', 'w', newline='') as csvfile:
+    #     csvwriter = csv.writer(csvfile)
+    #     csvwriter.writerow(result)
     
