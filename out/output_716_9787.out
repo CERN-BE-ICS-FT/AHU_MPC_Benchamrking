@@ -1,0 +1,9 @@
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+Runtime error due to infeaseablity in constraints etc... [9787.           25.           23.           24.2          26.2
+   26.2          27.05751332   90.           60.         -300.        ]

@@ -35,7 +35,7 @@ p_opts = {"expand": True, "ipopt.print_level": 0, "print_time": 0}
 s_opts = {"max_iter": 1000}
 opti.solver("ipopt", p_opts, s_opts)
 
-# Set the parameters to use inside the function 
+# Set other external parameters (constant) to use inside the function 
 Tsa_min = 16
 
 # This is the function that will be called when the alarm goes off
@@ -59,25 +59,27 @@ def mpc_function(task_id: int):
         end = time.time()
         total_time = end - start
         signal.alarm(0)
-        full_array = np.concatenate(([Toa], temperature_inputs, actuator_inputs, [total_time]))
+        full_array = np.concatenate(([task_id], [Toa], temperature_inputs, actuator_inputs, [total_time]))
         print('Solver succeeded...')
-        print('Toa, Tza, Tma, Tha, Tca, Tsa, omega,  dout, Total_time')
+        print('task_id, Toa, Tza, Tma, Tha, Tca, Tsa, omega,  dout, Total_time')
         print(full_array)
         return full_array
     except RuntimeError:
-        full_array = np.zeros(9)
-        full_array[0] = Toa
-        full_array[1:6] = temperature_inputs
-        full_array[6:8] = actuator_inputs
-        full_array[-1] = -300
+        full_array = np.zeros(10)
+        full_array[0] = task_id
+        full_array[1] = Toa
+        full_array[2:7] = temperature_inputs
+        full_array[7:9] = actuator_inputs
+        full_array[9] = -300
         print('Runtime error due to infeaseablity in constraints etc...', full_array)
         return full_array
     except TimeoutError:
-        full_array = np.zeros(9)
-        full_array[0] = Toa
-        full_array[1:6] = temperature_inputs
-        full_array[6:8] = actuator_inputs
-        full_array[-1] = -700
+        full_array = np.zeros(10)
+        full_array[0] = task_id
+        full_array[1] = Toa
+        full_array[2:7] = temperature_inputs
+        full_array[7:9] = actuator_inputs
+        full_array[9] = -300
         print('Function execution took too long, stopping...', full_array)
         return full_array
 

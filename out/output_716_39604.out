@@ -1,0 +1,12 @@
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+Solver succeeded...
+task_id, Toa, Tza, Tma, Tha, Tca, Tsa, omega,  dout, Total_time
+[3.96040000e+04 1.00000000e+01 1.70000000e+01 1.49000000e+01
+ 1.69000000e+01 1.29000000e+01 1.37575133e+01 9.00000000e+01
+ 3.00000000e+01 7.30470753e+00]

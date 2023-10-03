@@ -1,0 +1,2 @@
+slurmstepd-localhost: error: *** JOB 30357 ON localhost CANCELLED AT 2023-10-02T18:30:55 DUE TO TIME LIMIT ***
+slurmstepd-localhost: error: *** JOB 30357 STEPD TERMINATED ON localhost AT 2023-10-02T18:32:25 DUE TO JOB NOT ENDING WITH SIGNALS ***

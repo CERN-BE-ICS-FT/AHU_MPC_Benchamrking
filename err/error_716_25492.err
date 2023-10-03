@@ -1,0 +1,1 @@
+/var/lib/slurm-llnl/slurmd/job26209/slurm_script: line 12: 4044209 Killed                  /home/ubuntu/.pyenv/shims/python main.py $SLURM_ARRAY_TASK_ID

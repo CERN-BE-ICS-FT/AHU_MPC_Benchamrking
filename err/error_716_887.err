@@ -1,0 +1,2 @@
+CasADi - 2023-10-02 14:47:09 WARNING("KeyboardInterruptException") [.../casadi/interfaces/ipopt/ipopt_nlp.cpp:132]
+/var/lib/slurm-llnl/slurmd/job01604/slurm_script: line 12: 720037 Killed                  /home/ubuntu/.pyenv/shims/python main.py $SLURM_ARRAY_TASK_ID

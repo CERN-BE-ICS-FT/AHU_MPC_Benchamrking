@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/.pyenv/versions/3.10.12/lib/python3.10/site-packages/casadi/casadi.py", line 11062, in toarray
+    if self.is_scalar():
+  File "/home/ubuntu/.pyenv/versions/3.10.12/lib/python3.10/site-packages/casadi/casadi.py", line 4580, in is_scalar
+    return _casadi.GenDM_is_scalar(self, *args)
+NotImplementedError: Wrong number or type of arguments for function 'GenDM_is_scalar'.
+  Prototype:
+is_scalar(self,bool)
+  You have: '(DM)'
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/AHU_MPC_Benchamrking/main.py", line 93, in <module>
+    result = mpc_function(args.task_id)
+  File "/home/ubuntu/AHU_MPC_Benchamrking/main.py", line 56, in mpc_function
+    sol = mpc.solve(
+  File "/home/ubuntu/AHU_MPC_Benchamrking/mpc.py", line 213, in solve
+    u2_open_loop = sol.value(u2)
+  File "/home/ubuntu/.pyenv/versions/3.10.12/lib/python3.10/site-packages/casadi/casadi.py", line 50275, in value
+    return _casadi.OptiSol_value(self, *args)
+SystemError: <built-in function OptiSol_value> returned a result with an exception set
